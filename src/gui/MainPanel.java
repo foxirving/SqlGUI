@@ -1,13 +1,21 @@
 package gui;
 
 import java.awt.Color;
+import java.awt.HeadlessException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 
@@ -91,9 +99,9 @@ public class MainPanel extends JPanel {
 		JCheckBox isOnCampusButton = new JCheckBox("On campus");
 		isOnCampusButton.setSelected(true);
 		pInfo6.add(isOnCampusButton);
-		JCheckBox isOfCampusButton = new JCheckBox("Off campus");
-		isOfCampusButton.setSelected(true);
-		pInfo6.add(isOfCampusButton);
+		JCheckBox isNotOnCampusButton = new JCheckBox("Off campus");
+		isNotOnCampusButton.setSelected(true);
+		pInfo6.add(isNotOnCampusButton);
 	
 		/** -----------Vehicle Panel------------------- */
 
@@ -106,7 +114,41 @@ public class MainPanel extends JPanel {
 		JPanel pInfo12 = new JPanel();
 		panelVehicle.add(pInfo12);
 		JCheckBox hasVehicle = new JCheckBox("Has a vehicle");
+		hasVehicle.setSelected(true);
 		pInfo12.add(hasVehicle);
+		JCheckBox notHasVehicle = new JCheckBox("Does not have a vehicle");
+		notHasVehicle.setSelected(true);
+		pInfo12.add(notHasVehicle);
+		
+		JPanel pInfo14 = new JPanel();
+		panelVehicle.add(pInfo14);
+		pInfo14.add(new JLabel("Vehicle Licence Plate: "));
+		JTextField tfVehicleLicence = new JTextField();
+		pInfo14.add(tfVehicleLicence);
+		tfVehicleLicence.setColumns(10);
+		
+		JPanel pInfo15 = new JPanel();
+		panelVehicle.add(pInfo15);
+		pInfo15.add(new JLabel("Vehicle Licence Make: "));
+		JTextField tfVehicleMake = new JTextField();
+		pInfo15.add(tfVehicleMake);
+		tfVehicleMake.setColumns(10);
+		
+		JPanel pInfo16 = new JPanel();
+		panelVehicle.add(pInfo16);
+		pInfo16.add(new JLabel("Vehicle Licence Model: "));
+		JTextField tfVehicleModel = new JTextField();
+		pInfo16.add(tfVehicleModel);
+		tfVehicleModel.setColumns(10);
+		
+		JPanel pInfo17 = new JPanel();
+		panelVehicle.add(pInfo17);
+		pInfo17.add(new JLabel("Vehicle Licence Color: "));
+		JTextField tfVehicleColor = new JTextField();
+		pInfo17.add(tfVehicleColor);
+		tfVehicleColor.setColumns(10);
+		
+		
 		
 		
 		/** -------------Instructor Panel----------------- */
@@ -168,6 +210,37 @@ public class MainPanel extends JPanel {
 		panelDisplay.setLayout(new BoxLayout(panelDisplay, BoxLayout.Y_AXIS));
 
 		JButton btnStart = new JButton("Search Database");
+		btnStart.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				
+				DataModel.INSTANCE.setMyFirstName(tfStuFName.getText());
+				DataModel.INSTANCE.setMyMiddleName(tfStuMName.getText());
+				DataModel.INSTANCE.setMyLastName(tfStuLName.getText());
+				
+				DataModel.INSTANCE.setMyBirthYear(tfStuBirth.getText());
+				
+				DataModel.INSTANCE.setMale(maleButton.isSelected());
+				DataModel.INSTANCE.setFemale(femaleButton.isSelected());
+				DataModel.INSTANCE.setGenderNotSpecified(nbButton.isSelected());
+				
+				DataModel.INSTANCE.setOnCampus(isOnCampusButton.isSelected());
+				DataModel.INSTANCE.setNotOnCampus(isNotOnCampusButton.isSelected());
+				
+				
+			
+				
+				try {
+					ResultSet rs = DataModel.INSTANCE.getTable();
+					JTable table = new JTable(DisplayData.buildTableModel(rs));
+					JOptionPane.showMessageDialog(null, new JScrollPane(table));
+				} catch (HeadlessException e) {
+					e.printStackTrace();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		panelDisplay.add(btnStart);
 
 		JTextPane textPane = new JTextPane();
