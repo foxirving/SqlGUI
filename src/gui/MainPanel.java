@@ -11,13 +11,13 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
 
 import datamodel.Constants;
 import datamodel.DataModel;
@@ -34,13 +34,13 @@ public class MainPanel extends JPanel {
 	 * Create the panel.
 	 */
 	public MainPanel() {
-		setBackground(Color.ORANGE);
+		setBackground(Color.BLACK);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 		/** --------General Panel-------------------- */
 
 		JPanel panelGeneralInfo = new JPanel();
-		panelGeneralInfo.add(new JLabel("Database Used: " + DataModel.databaseName));
+		panelGeneralInfo.add(new JLabel("Database Used: StudentRecords"));
 		panelGeneralInfo.setBorder(BorderFactory.createLineBorder(Color.black));
 		add(panelGeneralInfo);
 
@@ -52,57 +52,80 @@ public class MainPanel extends JPanel {
 		panelStudent.add(new JLabel("Search by Student Information: "));
 		add(panelStudent);
 
-		JPanel pInfo1 = new JPanel();
-		panelStudent.add(pInfo1);
-		pInfo1.add(new JLabel("Student First Name: "));
-		JTextField tfStuFName = new JTextField();
-		pInfo1.add(tfStuFName);
-		tfStuFName.setColumns(10);
-		
-		JPanel pInfo2 = new JPanel();
-		panelStudent.add(pInfo2);
-		pInfo2.add(new JLabel("Student Middle Name: "));
-		JTextField tfStuMName = new JTextField();
-		pInfo2.add(tfStuMName);
-		tfStuMName.setColumns(10);
-		
-		JPanel pInfo3 = new JPanel();
-		panelStudent.add(pInfo3);
-		pInfo3.add(new JLabel("Student Last Name: "));
-		JTextField tfStuLName = new JTextField();
-		pInfo3.add(tfStuLName);
-		tfStuLName.setColumns(10);
-		
 		JPanel pInfo4 = new JPanel();
 		panelStudent.add(pInfo4);
 		pInfo4.add(new JLabel("Student Birth Year: "));
-		JTextField tfStuBirth = new JTextField();
-		pInfo4.add(tfStuBirth);
-		tfStuBirth.setColumns(10);
+		String[] birthDecade = new String[100];
+		for (int i = 0; i < 100; i++) {
+			birthDecade[i] = String.valueOf(2017 - i);
+ 		}
+		JComboBox birthDecadeBox = new JComboBox(birthDecade);
+		birthDecadeBox.setSelectedIndex(0);
+		birthDecadeBox.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String s = (String) birthDecadeBox.getSelectedItem();
+				DataModel.INSTANCE.setMyBirthYear(s);
+			}
+			
+		});
+		pInfo4.add(birthDecadeBox);
 
 		JPanel pInfo5 = new JPanel();
 		panelStudent.add(pInfo5);
 		pInfo5.add(new JLabel("Student Gender: "));
-		JCheckBox maleButton = new JCheckBox(Constants.MALE.getMyString());
-		maleButton.setSelected(true);
-		pInfo5.add(maleButton);
-		JCheckBox femaleButton = new JCheckBox(Constants.FEMALE.getMyString());
-		femaleButton.setSelected(true);
-		pInfo5.add(femaleButton);
-		JCheckBox nbButton = new JCheckBox("Gender Not Specified");
-		nbButton.setSelected(true);
-		pInfo5.add(nbButton);
+		String[] studentGender = { Constants.MALE.getMyString(), Constants.FEMALE.getMyString(), Constants.NOT_SPECIFIED.getMyString() };
+		JComboBox studentGenderBox = new JComboBox(studentGender);
+		studentGenderBox.setSelectedIndex(0);
+		studentGenderBox.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String s = (String) studentGenderBox.getSelectedItem();
+				DataModel.INSTANCE.setMyStudentGender(s);
+			}
+			
+		});
+		pInfo5.add(studentGenderBox);
 		
+		JPanel pInfo9 = new JPanel();
+		panelStudent.add(pInfo9);
+		pInfo9.add(new JLabel("Student Gender: "));
+		String[] studentGrade = new String[40];
+		for (int i = 0; i < 40; i++) {
+			studentGrade[i] = String.valueOf(0.0 + (i*0.1)).substring(0, 3);
+		}
+		JComboBox studentGradeBox = new JComboBox(studentGrade);
+		studentGradeBox.setSelectedIndex(0);
+		studentGradeBox.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String s = (String) studentGradeBox.getSelectedItem();
+				DataModel.INSTANCE.setMyStudentGrade(s);
+			}
+			
+		});
+		pInfo9.add(studentGradeBox);
+
 		JPanel pInfo6 = new JPanel();
 		panelStudent.add(pInfo6);
 		pInfo6.add(new JLabel("Residancy: "));
-		JCheckBox isOnCampusButton = new JCheckBox("On campus");
-		isOnCampusButton.setSelected(true);
-		pInfo6.add(isOnCampusButton);
-		JCheckBox isNotOnCampusButton = new JCheckBox("Off campus");
-		isNotOnCampusButton.setSelected(true);
-		pInfo6.add(isNotOnCampusButton);
-	
+		String[] studentResidancy = {"On Campus", "Off Campus"};
+		JComboBox studentResidancyBox = new JComboBox(studentResidancy);
+		studentResidancyBox.setSelectedIndex(0);
+		studentResidancyBox.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String s = (String) studentResidancyBox.getSelectedItem();
+				DataModel.INSTANCE.setMyStudentResidancy(s);
+			}
+			
+		});
+		pInfo6.add(studentResidancyBox);
+
 		/** -----------Vehicle Panel------------------- */
 
 		JPanel panelVehicle = new JPanel();
@@ -110,97 +133,41 @@ public class MainPanel extends JPanel {
 		panelVehicle.setLayout(new BoxLayout(panelVehicle, BoxLayout.Y_AXIS));
 		panelVehicle.add(new JLabel("Search by Vehicle Information: "));
 		add(panelVehicle);
-		
+
 		JPanel pInfo12 = new JPanel();
 		panelVehicle.add(pInfo12);
 		JCheckBox hasVehicle = new JCheckBox("Has a vehicle");
-		hasVehicle.setSelected(true);
-		pInfo12.add(hasVehicle);
-		JCheckBox notHasVehicle = new JCheckBox("Does not have a vehicle");
-		notHasVehicle.setSelected(true);
-		pInfo12.add(notHasVehicle);
-		
-		JPanel pInfo14 = new JPanel();
-		panelVehicle.add(pInfo14);
-		pInfo14.add(new JLabel("Vehicle Licence Plate: "));
-		JTextField tfVehicleLicence = new JTextField();
-		pInfo14.add(tfVehicleLicence);
-		tfVehicleLicence.setColumns(10);
-		
-		JPanel pInfo15 = new JPanel();
-		panelVehicle.add(pInfo15);
-		pInfo15.add(new JLabel("Vehicle Licence Make: "));
-		JTextField tfVehicleMake = new JTextField();
-		pInfo15.add(tfVehicleMake);
-		tfVehicleMake.setColumns(10);
-		
-		JPanel pInfo16 = new JPanel();
-		panelVehicle.add(pInfo16);
-		pInfo16.add(new JLabel("Vehicle Licence Model: "));
-		JTextField tfVehicleModel = new JTextField();
-		pInfo16.add(tfVehicleModel);
-		tfVehicleModel.setColumns(10);
-		
-		JPanel pInfo17 = new JPanel();
-		panelVehicle.add(pInfo17);
-		pInfo17.add(new JLabel("Vehicle Licence Color: "));
-		JTextField tfVehicleColor = new JTextField();
-		pInfo17.add(tfVehicleColor);
-		tfVehicleColor.setColumns(10);
-		
-		
-		
-		
-		/** -------------Instructor Panel----------------- */
+		String[] studentVehicle = {"Has Vehicle", "Does Not Have Vehicle"};
+		JComboBox studentVehicleBox = new JComboBox(studentVehicle);
+		studentVehicleBox.setSelectedIndex(0);
+		studentVehicleBox.addActionListener(new ActionListener() {
 
-		JPanel panelInstructor = new JPanel();
-		panelInstructor.setBorder(BorderFactory.createLineBorder(Color.black));
-		panelInstructor.setLayout(new BoxLayout(panelInstructor, BoxLayout.Y_AXIS));
-		panelInstructor.add(new JLabel("Search by Instructor Information: "));
-		add(panelInstructor);
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String s = (String) studentVehicleBox.getSelectedItem();
+				DataModel.INSTANCE.setMyStudentVehicle(s);
+			}
+			
+		});
+		pInfo12.add(studentVehicleBox);
 
-		JPanel pInfo7 = new JPanel();
-		panelInstructor.add(pInfo7);
-		pInfo7.add(new JLabel("Instructors First Name: "));
-		JTextField ftInstFName = new JTextField();
-		pInfo7.add(ftInstFName);
-		ftInstFName.setColumns(10);
-		
-		JPanel pInfo8 = new JPanel();
-		panelInstructor.add(pInfo8);
-		pInfo8.add(new JLabel("Instructors Last Name: "));
-		JTextField ftInstLName = new JTextField();
-		pInfo8.add(ftInstLName);
-		ftInstLName.setColumns(10);
-		
-		JPanel pInfo9 = new JPanel();
-		panelInstructor.add(pInfo9);
-		pInfo9.add(new JLabel("Instructors Pnone Number: "));
-		JTextField ftInstPhoneNumb = new JTextField();
-		pInfo9.add(ftInstPhoneNumb);
-		ftInstPhoneNumb.setColumns(10);
+		JPanel pInfo13 = new JPanel();
+		panelVehicle.add(pInfo13);
+		pInfo13.add(new JLabel("Search by Vehicle Decade: "));
+		String[] vehicleDecade = { "2010", "2000", "1990", "1980", "1970", "1960", "1950" };
+		JComboBox vehicleDecadeBox = new JComboBox(vehicleDecade);
+		vehicleDecadeBox.setSelectedIndex(0);
+		vehicleDecadeBox.addActionListener(new ActionListener() {
 
-		
-		/** ---------------Course Panel----------------- */
-		JPanel panelCourse = new JPanel();
-		panelCourse.setBorder(BorderFactory.createLineBorder(Color.black));
-		panelCourse.setLayout(new BoxLayout(panelCourse, BoxLayout.Y_AXIS));
-		panelCourse.add(new JLabel("Search by Course Information: "));
-		add(panelCourse);
-		
-		JPanel pInfo10 = new JPanel();
-		panelCourse.add(pInfo10);
-		pInfo10.add(new JLabel("Course Name: "));
-		JTextField tfCourseName = new JTextField();
-		pInfo10.add(tfCourseName);
-		tfCourseName.setColumns(10);
-		
-		JPanel pInfo11 = new JPanel();
-		panelCourse.add(pInfo11);
-		pInfo11.add(new JLabel("Course Instructor: "));
-		JTextField tfCorseInst = new JTextField();
-		pInfo11.add(tfCorseInst);
-		tfCorseInst.setColumns(10);
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String s = (String) vehicleDecadeBox.getSelectedItem();
+				DataModel.INSTANCE.setMyVehicleYear(s);
+			}
+			
+		});
+		pInfo13.add(vehicleDecadeBox);
+
 
 		/** ---------Display Panel-------------------- */
 
@@ -213,23 +180,7 @@ public class MainPanel extends JPanel {
 		btnStart.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				
-				DataModel.INSTANCE.setMyFirstName(tfStuFName.getText());
-				DataModel.INSTANCE.setMyMiddleName(tfStuMName.getText());
-				DataModel.INSTANCE.setMyLastName(tfStuLName.getText());
-				
-				DataModel.INSTANCE.setMyBirthYear(tfStuBirth.getText());
-				
-				DataModel.INSTANCE.setMale(maleButton.isSelected());
-				DataModel.INSTANCE.setFemale(femaleButton.isSelected());
-				DataModel.INSTANCE.setGenderNotSpecified(nbButton.isSelected());
-				
-				DataModel.INSTANCE.setOnCampus(isOnCampusButton.isSelected());
-				DataModel.INSTANCE.setNotOnCampus(isNotOnCampusButton.isSelected());
-				
-				
-			
-				
+
 				try {
 					ResultSet rs = DataModel.INSTANCE.getTable();
 					JTable table = new JTable(DisplayData.buildTableModel(rs));
@@ -242,10 +193,6 @@ public class MainPanel extends JPanel {
 			}
 		});
 		panelDisplay.add(btnStart);
-
-		JTextPane textPane = new JTextPane();
-		textPane.setEditable(false);
-		panelDisplay.add(textPane);
 
 	}
 }

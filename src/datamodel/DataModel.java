@@ -1,12 +1,12 @@
 package datamodel;
 
-import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public enum DataModel {
 
@@ -23,27 +23,21 @@ public enum DataModel {
 		// private constructor;
 	}
 
-	private boolean isOnCampus = false;
+	private String myStudentResidancy = NOT_SPECIFIED;
 
-	private boolean isNotOnCampus = false;
+	private String myStudentVehicle = NOT_SPECIFIED;
 
-	private boolean hasVehicle = false;
-
+	private String myStudentGrade = "0.0";
+	
 	private boolean getStudent = false;
 
 	private boolean getInstructor = false;
 
 	private boolean getCourses = false;
 
-	private boolean isMale = false;
-
-	private boolean isFemale = false;
-
-	private boolean isGenderNotSpecified = false;
-
+	private String myStudentGender = NOT_SPECIFIED;
+	
 	private  String myFirstName = NOT_SPECIFIED;
-
-	private  String myMiddleName = NOT_SPECIFIED;
 
 	private  String myLastName = NOT_SPECIFIED;
 
@@ -72,17 +66,52 @@ public enum DataModel {
 	private double myUpperGrade = 4.0;
 
 	public ResultSet getTable() throws SQLException {
+		
+		StringBuilder sb = new StringBuilder();
+		
+		/**
+		 * Build Query Here
+		 */
 	
+		
+		
 		/**
 		 * Executes Query here.
 		 */
-		Statement stmt = null;
+		PreparedStatement stmt = null;
 		Connection conn = null;
 		ResultSet rset = null;
+		ResultSetMetaData rsmd = null;
 		try {
-			conn = DriverManager.getConnection(SqlUrl, SqlUsername, SqlPassword);
+			/* This requires the JDBC SQL driver, available from Microsoft at
+			 * https://www.microsoft.com/en-us/download/details.aspx?displaylang=en&id=11774
+			 * Once the download is complete and unzipped, the .jar file must be added to the 
+			 * project build path through Project > Properties > Libraries > Add External Jar;
+			 * You also need to go to that same window >  Order and Export and make sure the box
+			 * is checked for that .jar. 
+			 * Then, you also need to go to Run > Run Configurations > Classpath, select
+			 * User Defined Entries, and Add External Jar to add the same jar to the classpath.
+			 * You must also go to Run > Run Configurations > Argumets and add the following
+			 * as a VM Argument (NOT as a Program Argument!!):
+			 * "-Djava.library.path="$PATH\sqljdbc_6.2\enu\auth\x64", where $PATH is the
+			 * path to the folder where you unzipped the driver. Also be sure to point to the right
+			 * folder for x64 or x86 depending on the driver you used. 
+			 */
+
+			// we're using Windows authentication so we don't need the username and password
+			String url = "jdbc:sqlserver://localhost\\SQLEXPRESS:1433;databaseName=StudentRecords;integratedSecurity=true";
+
+			conn = DriverManager.getConnection(url);
+
 			DatabaseMetaData dbmd = conn.getMetaData();
-			databaseName = dbmd.getDatabaseProductName();
+			
+			// this translates the string into a SQL query
+			stmt = conn.prepareStatement(sb.toString());
+			
+			// Executes the query
+			rset = stmt.executeQuery();
+
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -90,40 +119,10 @@ public enum DataModel {
 			stmt.close();
 			conn.close();
 		}
+
 		
-		// Gets list with all males in it.
-		String fnStudentGender = "{call dbo.fnStudentGender (?)}";
-		CallableStatement cs2 = conn.prepareCall(fnStudentGender);
-		cs2.setString(1, Constants.MALE.getMyString());
-		ResultSet rs = cs2.executeQuery();
-	
-		
-		return null;
+		return rset;
 
-	}
-
-	public boolean isOnCampus() {
-		return isOnCampus;
-	}
-
-	public void setOnCampus(boolean isOnCampus) {
-		this.isOnCampus = isOnCampus;
-	}
-
-	public boolean isNotOnCampus() {
-		return isNotOnCampus;
-	}
-
-	public void setNotOnCampus(boolean isNotOnCampus) {
-		this.isNotOnCampus = isNotOnCampus;
-	}
-
-	public boolean isHasVehicle() {
-		return hasVehicle;
-	}
-
-	public void setHasVehicle(boolean hasVehicle) {
-		this.hasVehicle = hasVehicle;
 	}
 
 	public boolean isGetStudent() {
@@ -148,30 +147,6 @@ public enum DataModel {
 
 	public void setGetCourses(boolean getCourses) {
 		this.getCourses = getCourses;
-	}
-
-	public boolean isMale() {
-		return isMale;
-	}
-
-	public void setMale(boolean isMale) {
-		this.isMale = isMale;
-	}
-
-	public boolean isFemale() {
-		return isFemale;
-	}
-
-	public void setFemale(boolean isFemale) {
-		this.isFemale = isFemale;
-	}
-
-	public boolean isGenderNotSpecified() {
-		return isGenderNotSpecified;
-	}
-
-	public void setGenderNotSpecified(boolean isGenderNotSpecified) {
-		this.isGenderNotSpecified = isGenderNotSpecified;
 	}
 
 	public String getMyBirthYear() {
@@ -274,9 +249,6 @@ public enum DataModel {
 		return myFirstName;
 	}
 
-	public String getMyMiddleName() {
-		return myMiddleName;
-	}
 
 	public String getMyLastName() {
 		return myLastName;
@@ -286,12 +258,41 @@ public enum DataModel {
 		this.myFirstName = myFirstName;
 	}
 
-	public void setMyMiddleName(String myMiddleName) {
-		this.myMiddleName = myMiddleName;
-	}
+
 
 	public void setMyLastName(String myLastName) {
 		this.myLastName = myLastName;
+	}
+
+	public void setMyStudentGender(String s) {
+		this.myStudentGender = s;
+		
+	}
+
+	public String getMyStudentResidancy() {
+		return myStudentResidancy;
+	}
+
+	public void setMyStudentResidancy(String myStudentResidancy) {
+		this.myStudentResidancy = myStudentResidancy;
+	}
+
+
+	public String getMyStudentVehicle() {
+		return myStudentVehicle;
+	}
+
+
+	public void setMyStudentVehicle(String myStudentVehicle) {
+		this.myStudentVehicle = myStudentVehicle;
+	}
+
+	public String getMyStudentGrade() {
+		return myStudentGrade;
+	}
+
+	public void setMyStudentGrade(String myStudentGrade) {
+		this.myStudentGrade = myStudentGrade;
 	}
 	
 	
