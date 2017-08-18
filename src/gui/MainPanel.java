@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -42,6 +43,7 @@ public class MainPanel extends JPanel {
 		JPanel panelGeneralInfo = new JPanel();
 		panelGeneralInfo.add(new JLabel("Database Used: StudentRecords"));
 		panelGeneralInfo.setBorder(BorderFactory.createLineBorder(Color.black));
+		panelGeneralInfo.setLayout(new FlowLayout(FlowLayout.LEFT));
 		add(panelGeneralInfo);
 
 		/** -----------Student Panel------------------- */
@@ -91,7 +93,7 @@ public class MainPanel extends JPanel {
 		
 		JPanel pInfo9 = new JPanel();
 		panelStudent.add(pInfo9);
-		pInfo9.add(new JLabel("Student Gender: "));
+		pInfo9.add(new JLabel("Student Grade: "));
 		String[] studentGrade = new String[40];
 		for (int i = 0; i < 40; i++) {
 			studentGrade[i] = String.valueOf(0.0 + (i*0.1)).substring(0, 3);
@@ -111,7 +113,7 @@ public class MainPanel extends JPanel {
 
 		JPanel pInfo6 = new JPanel();
 		panelStudent.add(pInfo6);
-		pInfo6.add(new JLabel("Residancy: "));
+		pInfo6.add(new JLabel("Residency: "));
 		String[] studentResidancy = {"On Campus", "Off Campus"};
 		JComboBox studentResidancyBox = new JComboBox(studentResidancy);
 		studentResidancyBox.setSelectedIndex(0);
@@ -162,7 +164,7 @@ public class MainPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String s = (String) vehicleDecadeBox.getSelectedItem();
-				DataModel.INSTANCE.setMyVehicleYear(s);
+				DataModel.INSTANCE.setMyStudentVehicleDecade(s);
 			}
 			
 		});
